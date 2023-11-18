@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+	
+	<!-- ref: https://juejin.cn/post/6844903982582743048-->
+
+	<!-- 引入外部配置文件 -->
+	<!-- <properties resource="application.yaml" />-->
+	<!-- 
+		id:任意,但不可重复 
+		defaultModelType(可选):，默认值 conditional，flat表示一张表对应一个po
+		targetRuntime(可选): 默认值 MyBatis3，常用的还有 MyBatis3Simple，这个配置会影响生成的 dao
+	和mapper.xml的内容 
+	-->
+	<context id="context1" targetRuntime="MyBatis3Simple"
+		defaultModelType="flat">
+		<!-- 插件给生成的Java模型对象增加了equals和hashCode方法-->
+		<!-- <plugin
+		type="org.mybatis.generator.plugins.EqualsHashCodePlugin"/>-->
+		
+		<commentGenerator>
+			<!-- 是否不生成注释 -->
+			<property name="suppressAllComments" value="true" />
+			<!-- 不希望生成的注释中包含时间戳 -->
+			<property name="suppressDate" value="true" />
+			<!-- 添加 db 表中字段的注释 -->
+			<property name="addRemarkComments" value="true" />
+		</commentGenerator>
+
+
+		<jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
+			connectionURL="jdbc:mysql://192.168.112.130:3306/dynamic-datasource-demo?serverTimezone=Asia/Shanghai&amp;characterEncoding=utf8&amp;useSSL=false&amp;useUnicode=true"
+			userId="root"
+			password="root">
+			<!--高版本的 mysql-connector-java 需要设置 nullCatalogMeansCurrent=true-->
+			<property name="nullCatalogMeansCurrent" value="true" />
+		</jdbcConnection>
+
+		<javaTypeResolver>
+			<!--是否使用 bigDecimal，默认false。
+        false，把JDBC DECIMAL 和 NUMERIC 类型解析为 Integer
+        true，把JDBC DECIMAL 和 NUMERIC 类型解析为java.math.BigDecimal-->
+			<property name="forceBigDecimals" value="false" />
+			<!--默认false
+        false，将所有 JDBC 的时间类型解析为 java.util.Date
+        true，将 JDBC 的时间类型按如下规则解析
+            DATE	                -> java.time.LocalDate
+            TIME	                -> java.time.LocalTime
+            TIMESTAMP                   -> java.time.LocalDateTime
+            TIME_WITH_TIMEZONE  	-> java.time.OffsetTime
+            TIMESTAMP_WITH_TIMEZONE	-> java.time.OffsetDateTime
+        -->
+			<property name="useJSR310Types" value="false" />
+		</javaTypeResolver>
+
+		<javaModelGenerator targetPackage="wiki.sponge.dynamicdatasource.domain"
+			targetProject="src/main/java">
+			<!-- 是否让schema作为包的后缀，默认为false -->
+			<!--<property name="enableSubPackages" value="false"/>-->
+			<!-- 是否针对string类型的字段在set方法中进行修剪，默认false -->
+			<property name="trimStrings" value="true" />
+		</javaModelGenerator>
+
+		<sqlMapGenerator targetPackage="mapper"
+			targetProject="src/main/resources">
+			<!-- 是否让schema作为包的后缀，默认为false -->
+			<!--<property name="enableSubPackages" value="false"/>-->
+		</sqlMapGenerator>
+
+		<!-- type为ANNOTATEDMAPPER,会把sql语句写在接口的方法的注解上-->
+		<javaClientGenerator targetPackage="wiki.sponge.dynamicdatasource.mapper"
+			targetProject="src/main/java" type="XMLMAPPER">
+			<!-- 是否让schema作为包的后缀，默认为false -->
+			<!--<property name="enableSubPackages" value="false"/>-->
+		</javaClientGenerator>
+
+		<!-- schema为数据库名，oracle需要配置，mysql不需要配置。
+     tableName为对应的数据库表名
+     domainObjectName 是要生成的实体类名(可以不指定)
+     enableXXXByExample 默认为 true， 为 true 会生成一个对应Example帮助类，帮助你进行条件查询，不想要可以设为false
+     
+     domainObjectName 不配置时，它会按照帕斯卡命名法将表名转换成类名
+	 enableXXXByExample 默认为true，但只有在targetRuntime="MyBatis3"时才生效
+
+     -->
+		<table schema="" tableName="t_order" domainObjectName="Order"
+			enableCountByExample="false" enableDeleteByExample="false"
+			enableSelectByExample="false"
+			enableUpdateByExample="false" selectByExampleQueryId="false">
+			<!--是否使用实际列名,默认为false-->
+			<!--<property name="useActualColumnNames" value="false" />-->
+		</table>
+
+	</context>
+</generatorConfiguration>
