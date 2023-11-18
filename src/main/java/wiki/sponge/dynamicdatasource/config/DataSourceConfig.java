@@ -9,6 +9,7 @@ import javax.sql.DataSource;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
@@ -16,7 +17,7 @@ import org.springframework.util.CollectionUtils;
 
 import com.alibaba.druid.pool.DruidDataSourceFactory;
 
-@Component
+@Configuration
 @ConfigurationProperties(prefix = "spring.datasource")
 public class DataSourceConfig {
 	
@@ -49,14 +50,12 @@ public class DataSourceConfig {
 	@DependsOn({"masterDataSource","slaveDataSources"})
 	public DataSourceRouter dataSourceRouter() throws Exception {
 		DataSourceRouter dataSourceRouter = new DataSourceRouter();
-		DataSource masterDataSource = masterDataSource();
-		List<DataSource> slaveDataSources = slaveDataSources();
-		Map<Object,Object> hashMap = new HashMap<>(1+slaveDataSources.size());
+		Map<Object,Object> hashMap = new HashMap<>(1+slaveDataSources().size());
 		
-		hashMap.put(DataSourceConfigHolder.MASTER, masterDataSource);
+		hashMap.put(DataSourceConfigHolder.MASTER, masterDataSource());
 		
-		for(int i=0;i < slaveDataSources.size();i++) {
-			hashMap.put(DataSourceConfigHolder.SLAVE, slaveDataSources.get(i));			
+		for(int i=0;i < slaveDataSources().size();i++) {
+			hashMap.put(DataSourceConfigHolder.SLAVE+i, slaveDataSources().get(i));			
 		}
 		dataSourceRouter.setTargetDataSources(hashMap);
 		dataSourceRouter.setDefaultTargetDataSource(masterDataSource());
