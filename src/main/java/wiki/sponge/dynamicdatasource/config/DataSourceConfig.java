@@ -28,9 +28,9 @@ public class DataSourceConfig {
 	}
 
 	@Bean
-	public DataSource masterDataSource(DataSourceProperties masterDataSourceProperties) {
-		return masterDataSourceProperties.initializeDataSourceBuilder().type(HikariDataSource.class)
-				.build();
+	public DataSource masterDataSource() {
+		return masterDataSourceProperties().initializeDataSourceBuilder()
+				.type(HikariDataSource.class).build();
 	}
 
 	@Bean
@@ -40,30 +40,26 @@ public class DataSourceConfig {
 	}
 
 	@Bean
-	@DependsOn("slaveDataSourceProperties")
-	public DataSource slaveDataSource(DataSourceProperties slaveDataSourceProperties) {
-		return slaveDataSourceProperties.initializeDataSourceBuilder().type(HikariDataSource.class)
-				.build();
+	public DataSource slaveDataSource() {
+		return slaveDataSourceProperties().initializeDataSourceBuilder()
+				.type(HikariDataSource.class).build();
 	}
 
 	@Bean
 	@Primary
-	@DependsOn({ "masterDataSource", "slaveDataSource" })
-	public DataSourceRouter dataSourceRouter(DataSource masterDataSource,
-			DataSource slaveDataSource) {
+	public DataSourceRouter routingDataSource() {
 		DataSourceRouter dataSourceRouter = new DataSourceRouter();
 		Map<Object, Object> targetDataSources = new HashMap<>();
-		targetDataSources.put(DataSourceConfigHolder.MASTER, masterDataSource);
-		targetDataSources.put(DataSourceConfigHolder.SLAVE, slaveDataSource);
+		targetDataSources.put(DataSourceConfigHolder.MASTER, masterDataSource());
+		targetDataSources.put(DataSourceConfigHolder.SLAVE, slaveDataSource());
 		dataSourceRouter.setTargetDataSources(targetDataSources);
-		dataSourceRouter.setDefaultTargetDataSource(masterDataSource);
+		dataSourceRouter.setDefaultTargetDataSource(masterDataSource());
 
 		return dataSourceRouter;
 	}
 
 	@Bean
-	@DependsOn("masterDataSource")
-	public PlatformTransactionManager platformTransactionManager(DataSource masterDataSource) {
-		return new DataSourceTransactionManager(masterDataSource);
+	public PlatformTransactionManager platformTransactionManager() {
+		return new DataSourceTransactionManager(routingDataSource());
 	}
 }
