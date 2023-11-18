@@ -12,20 +12,21 @@ public class DataSourceConfigHolder {
 
 	public static String SLAVE = "SLAVE";
 
-	public static final ThreadLocal<String> ss = new ThreadLocal<>();
+	public static final ThreadLocal<String> CONTEXT_HOLDER = new ThreadLocal<>();
 
 	public static void setDataSourceKey(String key) throws Exception {
 		if (key == null) {
 			throw new Exception("数据源key不能为空");
 		}
-		ss.set(key);
+		log.info("设置数据源为:{}",key);
+		CONTEXT_HOLDER.set(key);
 	}
 
 	public static String getDataSourceKey() {
-		return null == ss.get() ? MASTER : ss.get();
+		return null == CONTEXT_HOLDER.get() ? MASTER : CONTEXT_HOLDER.get();
 	}
 
 	public static void removeDataSourceKey() {
-		ss.remove();
+		CONTEXT_HOLDER.remove();
 	}
 }

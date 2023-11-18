@@ -20,13 +20,13 @@ public class DynamicDataSourceAspect {
 
 	@Before(value = "execution(* *(..))&&@annotation(readOnly)")
 	public void before(JoinPoint joinPoint, ReadOnly readOnly) throws Exception {
-		log.info(joinPoint.getClass().getName()+"走从库");
+		log.info(joinPoint.getSignature().getName()+"走从库");
 		DataSourceConfigHolder.setDataSourceKey(DataSourceConfigHolder.SLAVE);
 	}
 
 	@After(value = "execution(* *(..))&&@annotation(readOnly)")
 	public void after(JoinPoint joinPoint, ReadOnly readOnly) {
-		log.info(joinPoint.getClass().getName()+"移除数据源");
+		log.info(joinPoint.getSignature().getName()+"移除数据源");
 		DataSourceConfigHolder.removeDataSourceKey();
 	}
 
