@@ -12,7 +12,6 @@ import wiki.sponge.dynamicdatasource.mapper.OrderMapper;
 import wiki.sponge.dynamicdatasource.service.OrderService;
 
 @Service
-@Slf4j
 public class OrderServiceImpl implements OrderService {
 	
 	@Autowired

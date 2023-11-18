@@ -5,8 +5,8 @@ spring:
       password: root
       url: jdbc:mysql://192.168.112.130:3306/dynamic-datasource-demo?serverTimezone=Asia/Shanghai&characterEncoding=utf8&useUnicode=true&useSSL=false
       driver-class-name: com.mysql.cj.jdbc.Driver
-    slaves:
-      - username: root
-        password: root
-        url: jdbc:mysql://192.168.112.130:3306/dynamic-datasource-demo?serverTimezone=Asia/Shanghai&characterEncoding=utf8&useUnicode=true&useSSL=false
-        driver-class-name: com.mysql.cj.jdbc.Driver
+    slave:
+       username: root
+       password: root
+       url: jdbc:mysql://192.168.112.130:3306/dynamic-datasource-demo?serverTimezone=Asia/Shanghai&characterEncoding=utf8&useUnicode=true&useSSL=false
+       driver-class-name: com.mysql.cj.jdbc.Driver
