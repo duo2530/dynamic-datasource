@@ -1,12 +1,9 @@
 package wiki.sponge.dynamicdatasource.mapper;
 
-import java.util.List;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+
 import wiki.sponge.dynamicdatasource.domain.Order;
 
-public interface OrderMapper {
-    int deleteByPrimaryKey(Long id);
-
-    int insert(Order record);
-
-    List<Order> selectAll();
+public interface OrderMapper extends BaseMapper<Order> {
+	
 }

@@ -21,7 +21,7 @@ public class OrderServiceImpl implements OrderService {
 	@ReadOnly
 	@Override
 	public List<Order> getAll() {
-		return orderMapper.selectAll();
+		return orderMapper.selectList(null);
 	}
 
 	@Override

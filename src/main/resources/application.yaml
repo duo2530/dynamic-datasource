@@ -3,11 +3,10 @@ spring:
     master:
       username: root
       password: root
-      url: jdbc:mysql://192.168.112.130:3306/dynamic-datasource?serverTimezone=Asia/Shanghai&characterEncoding=utf8&useUnicode=true&useSSL=false
+      url: jdbc:mysql://192.168.112.130:3306/dynamic-datasource-demo?serverTimezone=Asia/Shanghai&characterEncoding=utf8&useUnicode=true&useSSL=false
       driver-class-name: com.mysql.cj.jdbc.Driver
     slaves:
-      - slave1:
-        username: root
+      - username: root
         password: root
-        url: jdbc:mysql://192.168.112.130:3306/dynamic-datasource?serverTimezone=Asia/Shanghai&characterEncoding=utf8&useUnicode=true&useSSL=false
+        url: jdbc:mysql://192.168.112.130:3306/dynamic-datasource-demo?serverTimezone=Asia/Shanghai&characterEncoding=utf8&useUnicode=true&useSSL=false
         driver-class-name: com.mysql.cj.jdbc.Driver

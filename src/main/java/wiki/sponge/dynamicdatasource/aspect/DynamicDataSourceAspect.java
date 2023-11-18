@@ -1,6 +1,5 @@
 package wiki.sponge.dynamicdatasource.aspect;
 
-import org.aopalliance.intercept.Joinpoint;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
@@ -20,14 +19,14 @@ import wiki.sponge.dynamicdatasource.config.DataSourceConfigHolder;
 public class DynamicDataSourceAspect {
 
 	@Before(value = "execution(* *(..))&&@annotation(readOnly)")
-	public void before(Joinpoint joinPoint, ReadOnly readOnly) throws Exception {
-		log.info("切换数据源");
+	public void before(JoinPoint joinPoint, ReadOnly readOnly) throws Exception {
+		log.info(joinPoint.getClass().getName()+"走从库");
 		DataSourceConfigHolder.setDataSourceKey(DataSourceConfigHolder.SLAVE);
 	}
 
 	@After(value = "execution(* *(..))&&@annotation(readOnly)")
-	public void after(JoinPoint joinPoint, String args) {
-		log.info("移除数据源");
+	public void after(JoinPoint joinPoint, ReadOnly readOnly) {
+		log.info(joinPoint.getClass().getName()+"移除数据源");
 		DataSourceConfigHolder.removeDataSourceKey();
 	}
 

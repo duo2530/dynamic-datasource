@@ -12,13 +12,16 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Primary;
-import org.springframework.stereotype.Component;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.util.CollectionUtils;
 
 import com.alibaba.druid.pool.DruidDataSourceFactory;
 
+import lombok.Data;
+
 @Configuration
 @ConfigurationProperties(prefix = "spring.datasource")
+@Data
 public class DataSourceConfig {
 	
 	private Map<String,String> master;
@@ -48,8 +51,8 @@ public class DataSourceConfig {
 	@Bean
 	@Primary
 	@DependsOn({"masterDataSource","slaveDataSources"})
-	public DataSourceRouter dataSourceRouter() throws Exception {
-		DataSourceRouter dataSourceRouter = new DataSourceRouter();
+	public DataSourceRouter routingDataSource() throws Exception {
+		
 		Map<Object,Object> hashMap = new HashMap<>(1+slaveDataSources().size());
 		
 		hashMap.put(DataSourceConfigHolder.MASTER, masterDataSource());
@@ -57,10 +60,15 @@ public class DataSourceConfig {
 		for(int i=0;i < slaveDataSources().size();i++) {
 			hashMap.put(DataSourceConfigHolder.SLAVE+i, slaveDataSources().get(i));			
 		}
+		DataSourceRouter dataSourceRouter = new DataSourceRouter();
 		dataSourceRouter.setTargetDataSources(hashMap);
 		dataSourceRouter.setDefaultTargetDataSource(masterDataSource());
-		
 		return dataSourceRouter;
+	}
+	
+	@Bean
+	public DataSourceTransactionManager dataSourceTransactionManager() throws Exception {
+		return new DataSourceTransactionManager(routingDataSource());
 	}
 	
 
